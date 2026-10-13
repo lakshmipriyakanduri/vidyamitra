@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vidya Mitra</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2b59c3">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--ink:#1d2a44;--bg:#fff8e7;--card:#fff;--blue:#2b59c3;--line:#e6dcc3;--good:#1e8e4e;--bad:#c62828;--soft:#eef3ff}
+*{box-sizing:border-box}
+html{font-size:16px}
+body{margin:0;font-family:"Noto Sans Telugu","Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:1rem}
+[hidden]{display:none!important}
+header{padding:12px 14px 4px;max-width:720px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+h1{margin:0;font-size:1.5rem}
+.tools{display:flex;gap:6px;align-items:center}
+.tools button{border:2px solid var(--line);background:var(--card);border-radius:10px;padding:6px 10px;font:inherit;font-size:.85rem;font-weight:700;color:var(--ink);cursor:pointer}
+#who{font-size:.85rem;opacity:.8;margin:4px 0 0}
+main{max-width:720px;margin:0 auto;padding:6px 14px 40px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
+.tab{border:2px solid var(--line);background:var(--card);border-radius:14px;padding:10px 2px;font:inherit;font-size:.85rem;font-weight:700;color:var(--ink);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+textarea,input,select{width:100%;border:2px solid var(--line);border-radius:14px;padding:12px;font:inherit;background:var(--card);color:var(--ink)}
+textarea{min-height:100px;resize:vertical}
+.row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+button.act{flex:1;border:0;border-radius:14px;padding:13px;font:inherit;font-weight:700;cursor:pointer;background:var(--blue);color:#fff;min-width:110px}
+button.alt{background:#ffd966;color:var(--ink);flex:0 0 auto}
+button:disabled{opacity:.6;cursor:default}
+button:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f08a24;outline-offset:2px}
+.box{margin-top:14px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:14px;line-height:1.55}
+.pre{white-space:pre-wrap}
+.err{color:var(--bad)}
+.hint{font-size:.85rem;opacity:.75;margin:6px 2px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border-radius:10px;padding:6px 10px;text-align:center;line-height:1.2}
+.chip small{display:block;font-size:.75rem}
+.sec{margin-top:10px;border-radius:12px;padding:10px 12px;border-left:8px solid rgba(0,0,0,.25)}
+.sec h3{margin:0 0 2px;font-size:1.05rem}
+.sec p{margin:0 0 6px;font-size:.85rem;opacity:.8}
+.sec .w{display:inline-block;background:#fff;border-radius:8px;padding:3px 9px;margin:2px 4px 2px 0;font-weight:700}
+.qhead{display:flex;justify-content:space-between;font-size:.9rem;font-weight:700}
+.opt{display:block;width:100%;text-align:left;margin-top:8px;border:2px solid var(--line);background:var(--card);border-radius:12px;padding:12px;font:inherit;color:var(--ink);cursor:pointer}
+.opt.right{background:#d8f3e2;border-color:var(--good)}
+.opt.wrong{background:#fde0e0;border-color:var(--bad)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;text-align:center}
+.stat{background:var(--soft);border-radius:12px;padding:10px 4px}
+.stat b{display:block;font-size:1.4rem}
+.stat span{font-size:.75rem}
+.bar{height:10px;background:#eee;border-radius:6px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--blue)}
+/* access screen */
+#gate{max-width:480px;margin:0 auto;padding:30px 16px}
+#gate .box{margin-top:18px}
+#gate label{display:block;margin:10px 0 4px;font-weight:700}
+/* learn */
+.lv{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 8px}
+.lv button{flex:0 0 auto;border:2px solid var(--line);background:var(--card);border-radius:20px;padding:6px 12px;font:inherit;font-size:.85rem;font-weight:700;color:var(--ink);cursor:pointer}
+.lv button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.subj{margin-top:12px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px}
+.subj h3{margin:0;font-size:1.05rem}
+.mod{display:flex;align-items:center;gap:10px;width:100%;margin-top:8px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;font:inherit;text-align:left;color:var(--ink);cursor:pointer}
+.mod.done{background:#d8f3e2;border-color:var(--good)}
+.mod.open{border-color:var(--blue)}
+.mod.locked{opacity:.55;cursor:not-allowed}
+.mod span:nth-child(2){flex:1}
+.mod small{font-size:.75rem;opacity:.8}
+.story{background:#fffdf3;border-left:8px solid #ffd966}
+.visual{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.scene{background:var(--soft);border-radius:14px;padding:10px;text-align:center;width:calc(50% - 20px);min-width:120px;flex:1 1 120px}
+.scene .em{font-size:2.2rem;line-height:1.2}
+.scene p{margin:4px 0 0;font-size:.85rem}
+.arrow{font-size:1.2rem;opacity:.5}
+.kp li{margin:4px 0}
+h2{font-size:1.25rem;margin:10px 0 4px}
+</style>
+</head>
+<body>
+
+<section id="gate" hidden>
+  <h1 style="text-align:center">Vidya Mitra</h1>
+  <p class="hint" style="text-align:center">Your friendly AI teacher, from Nursery to Class 10</p>
+  <div class="box">
+    <label for="gcls">Your class</label>
+    <select id="gcls"></select>
+    <label for="groll">Your roll number</label>
+    <input id="groll" type="number" inputmode="numeric" min="1" max="9999" placeholder="Example: 12">
+    <div class="row"><button class="act" id="gostart">Start learning</button></div>
+    <p class="hint" id="gerr" style="color:var(--bad)"></p>
+    <p class="hint">Your class and roll number are saved only on this device, to keep your progress. They are not sent anywhere. This is not a password, so please do not share private details.</p>
+  </div>
+</section>
+
+<div id="app" hidden>
+<header>
+  <div class="top">
+    <h1>Vidya Mitra</h1>
+    <div class="tools">
+      <button id="fsm" aria-label="Smaller text">A-</button>
+      <button id="fsp" aria-label="Bigger text">A+</button>
+      <button id="switch">Switch</button>
+    </div>
+  </div>
+  <p id="who"></p>
+</header>
+<main>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-mode="learn">Learn</button>
+    <button class="tab" role="tab" data-mode="ask">Ask</button>
+    <button class="tab" role="tab" data-mode="telugu">Translate</button>
+    <button class="tab" role="tab" data-mode="pos">Grammar</button>
+  </div>
+
+  <section id="learn-area" hidden>
+    <div id="modules-wrap">
+      <p class="hint">Finish each module (read the story, then pass the quiz) to open the next one.</p>
+      <div class="lv" id="levels"></div>
+      <div id="modules"></div>
+    </div>
+    <div id="module" hidden>
+      <button class="act alt" id="back">&larr; All modules</button>
+      <h2 id="mtitle"></h2>
+      <p class="hint" id="msub"></p>
+      <div class="row">
+        <button class="act" id="teach">Teach me with a story</button>
+        <button class="act alt" id="lang">English</button>
+        <button class="act alt" id="speak2" aria-label="Read aloud">&#128266;</button>
+      </div>
+      <div id="lesson"></div>
+      <div class="row"><button class="act" id="takequiz">Take the quiz</button></div>
+      <div id="quiz"></div>
+    </div>
+  </section>
+
+  <section id="text-area" hidden>
+    <textarea id="text" aria-label="Your text"></textarea>
+    <p class="hint" id="hint"></p>
+    <div class="row">
+      <button class="act" id="go">Get answer</button>
+      <button class="act alt" id="mic" aria-label="Speak">&#127908;</button>
+      <button class="act alt" id="speak" aria-label="Read aloud">&#128266;</button>
+    </div>
+    <div class="box pre" id="out" aria-live="polite">Your answer will show here.</div>
+  </section>
+
+  <p class="hint" style="text-align:center;margin-top:24px">Answers can sometimes be wrong. Check with your teacher. Please do not type your name, phone number, or address.</p>
+  <details class="box" style="font-size:.9rem">
+    <summary style="cursor:pointer;font-weight:700">Privacy and safety</summary>
+    <p><b>What is saved on your device:</b> your class, roll number, quiz results and text size. These stay in this browser or phone and are never sent to our server or the AI.</p>
+    <p><b>What is sent to the AI:</b> only the topic, class level and the text you type, to Google Gemini through our server, to get an answer. We do not keep a list of your questions. Please never type personal details.</p>
+    <p><b>Not a password:</b> anyone can type any class and roll number on a shared device, so do not use this as a secure login.</p>
+    <p><b>Safety:</b> the app only helps with school topics. AI can make mistakes, so check important answers with a teacher or textbook. If something worries you, talk to a parent, teacher, or trusted adult. CHILDLINE 1098 is free in India.</p>
+    <p><b>Parents and teachers:</b> sample topics are not the official syllabus. Please review them. Contact the app owner for questions or changes.</p>
+  </details>
+</main>
+</div>
+
+<script>
+// 1. PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE (it ends with /exec)
+const WORKER_URL = "https://script.google.com/macros/s/AKfycbzhu7lx-utQyQug1PpZ9r4nx5NQWdwAsCdMgsq2hpwRudakZaDZfDrFuYvUqsGbMq0m/exec" // 60% needed to finish a module
+
+/* ---------- Syllabus: sample topics, module by module (edit freely) ---------- */
+const LEVELS = ["Nursery","LKG","UKG","1","2","3","4","5","6","7","8","9","10"];
+const label = l => /^\d+$/.test(l) ? "Class " + l : l;
+const RAW = {
+ Nursery:"English: Letters A to E; Letters F to J; Letters K to O; Letters P to T|Maths: Numbers 1 to 5; Numbers 6 to 10; Big and small; Circle and square|My World: My body parts; Colours; Animals around us; Fruits and vegetables",
+ LKG:"English: Capital letters; Small letters; Vowels; Three letter words|Maths: Numbers 1 to 20; Counting objects; More and less; Shapes around us|My World: My family; Pets and wild animals; Seasons; Good habits",
+ UKG:"English: Rhyming words; Simple sentences; Opposites; Sight words|Maths: Numbers 1 to 50; Addition with pictures; Subtraction with pictures; Before, after and between|My World: Plants and trees; Transport; Days of the week; Healthy food",
+ "1":"English: Nouns, the names of things; Action words; Simple sentences; Rhymes and short stories|Maths: Numbers up to 99; Addition; Subtraction; Shapes and patterns|EVS: My family and home; Plants around us; Animals and their homes; Water and air",
+ "2":"English: Naming and describing words; Using is, am and are; Opposites and rhymes; Reading a short story|Maths: Numbers up to 999; Addition with carrying; Subtraction with borrowing; Time and money|EVS: Our body and senses; Food we eat; Safety rules; Festivals of India",
+ "3":"English: Nouns and pronouns; Verbs and simple tenses; Adjectives; Writing a paragraph|Maths: Place value; Multiplication tables; Division basics; Measuring length and weight|EVS: Plants and animals; Where water comes from; Food and health; Our neighbourhood",
+ "4":"English: Tenses; Prepositions; Singular and plural; Letter writing|Maths: Large numbers; Fractions; Multiplication and division; Time, money and perimeter|EVS: Parts of a plant; Food chain; Soil and water; Our country India",
+ "5":"English: Adverbs; Conjunctions; Reading comprehension; Story and essay writing|Maths: Large numbers and rounding; Fractions and decimals; Area and perimeter; Data handling|Science: Our digestive system; How plants make food; Planets and the Sun; Pollution and our environment",
+ "6":"English: Parts of speech; Tenses; Articles and prepositions; Letter and paragraph writing|Maths: Whole numbers; Fractions; Decimals; Basic geometry|Science: Components of food; Fibre to fabric; Light and shadows; Electricity and circuits|Social: Maps and the globe; Early humans; Local government; Diversity in India",
+ "7":"English: Active and passive voice; Direct and indirect speech; Clauses and phrases; Notices and letters|Maths: Integers; Fractions and decimals; Simple equations; Triangles|Science: Nutrition in plants and animals; Heat and temperature; Acids, bases and salts; Weather and climate|Social: The Mughal Empire; Inside the Earth; Water on Earth; Democracy and equality",
+ "8":"English: Voice and speech; Conditional sentences; Reading comprehension; Formal letters and essays|Maths: Rational numbers; Linear equations; Squares and square roots; Area and mensuration|Science: Crop production; Microorganisms; Force and pressure; Sound|Social: British rule in India; The Indian Constitution; Natural resources; Industries",
+ "9":"English: Tenses and modals; Reported speech; Letters and reports; Reading comprehension|Maths: Number systems; Polynomials; Lines and angles; Triangles|Science: Matter around us; Atoms and molecules; The cell; Force and laws of motion|Social: The French Revolution; Physical features of India; What is democracy; People as a resource",
+ "10":"English: Reported speech and voice; Tenses and modals; Formal letters and essays; Reading comprehension|Maths: Real numbers; Quadratic equations; Introduction to trigonometry; Probability|Science: Chemical reactions and equations; Acids, bases and salts; Electricity; Life processes|Social: Nationalism in India; Resources and development; Power sharing; Money and credit"
+};
+const CURR = {};
+LEVELS.forEach(l => { CURR[l] = RAW[l].split("|").map(s => { const p = s.split(":"); return {sub:p[0].trim(), topics:p[1].split(";").map(t => t.trim())}; }); });
+
+/* ---------- Helpers ---------- */
+const $ = id => document.getElementById(id);
+const mem = {};
+function load(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return mem[k] !== undefined ? mem[k] : d; } }
+function save(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch { mem[k] = v; } }
+function el(tag, props, kids){
+  const e = document.createElement(tag); Object.assign(e, props || {});
+  (kids || []).forEach(k => e.appendChild(typeof k === "string" ? document.createTextNode(k) : k)); return e;
+}
+function showError(target, msg){ target.replaceChildren(el("span",{className:"err",textContent:msg})); }
+async function callAI(m, text){
+  if (!navigator.onLine) throw new Error("No internet. Please connect and try again.");
+  const r = await fetch(WORKER_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({mode:m,text})});
+  const d = await r.json(); if (d.error) throw new Error(d.error); return d.answer;
+}
+function parseJSON(raw){ return JSON.parse(String(raw).replace(/```json|```/g,"").trim()); }
+function speakText(t){
+  if (!t || !window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t); u.lang = /[\u0C00-\u0C7F]/.test(t) ? "te-IN" : "en-IN"; u.rate = 0.9; speechSynthesis.speak(u);
+}
+
+/* ---------- Access (class + roll number, saved on this device only) ---------- */
+let profile = load("vm_profile", null);
+LEVELS.forEach(l => $("gcls").appendChild(el("option",{value:l,textContent:label(l)})));
+$("gostart").onclick = () => {
+  const roll = String($("groll").value).trim();
+  if (!/^\d{1,4}$/.test(roll) || +roll < 1){ $("gerr").textContent = "Please type your roll number (numbers only)."; return; }
+  profile = {cls:$("gcls").value, roll:roll}; save("vm_profile", profile); $("gerr").textContent = ""; enter();
+};
+$("switch").onclick = () => { try { localStorage.removeItem("vm_profile"); } catch {} delete mem.vm_profile; profile = null; $("groll").value = ""; enter(); };
+function enter(){
+  $("gate").hidden = !!profile; $("app").hidden = !profile;
+  if (!profile) return;
+  $("who").textContent = label(profile.cls) + "  |  Roll no. " + profile.roll;
+  viewLevel = profile.cls; setMode("learn");
+}
+
+/* ---------- Text size ---------- */
+let fs = load("vm_fs", 16);
+function applyFs(){ document.documentElement.style.fontSize = fs + "px"; save("vm_fs", fs); }
+$("fsm").onclick = () => { fs = Math.max(13, fs - 2); applyFs(); };
+$("fsp").onclick = () => { fs = Math.min(26, fs + 2); applyFs(); };
+applyFs();
+
+/* ---------- Tabs ---------- */
+const MODES = {
+  ask:{hint:"Type any school question. Example: Why is the sky blue?",ph:"Type your question...",mic:"en-IN"},
+  telugu:{hint:"Type Telugu to get English, or English to get Telugu. Example: నేను పాఠశాలకు వెళ్తున్నాను",ph:"Type Telugu or English...",mic:"te-IN"},
+  pos:{hint:"Type an English sentence. Example: The small dog runs quickly.",ph:"Type a sentence...",mic:"en-IN"}
+};
+let mode = "learn", lastAnswer = "", viewLevel = "1";
+const out = $("out"), box = $("text");
+function setMode(m){
+  mode = m;
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.mode === m));
+  const learn = m === "learn"; $("learn-area").hidden = !learn; $("text-area").hidden = learn;
+  if (learn){ showModules(); }
+  else { box.placeholder = MODES[m].ph; $("hint").textContent = MODES[m].hint; out.className = "box pre"; out.textContent = "Your answer will show here."; lastAnswer = ""; }
+}
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => setMode(t.dataset.mode));
+
+/* ---------- Progress ---------- */
+const mid = (lv, sub, i) => lv + "|" + sub + "|" + i;
+const pkey = () => profile.cls + "_" + profile.roll;
+function prog(){ return load("vm_progress", {})[pkey()] || {}; }
+function setDone(id, acc, avg){
+  const all = load("vm_progress", {}); const p = all[pkey()] || {};
+  if (!p[id] || acc > p[id].acc) p[id] = {acc, avg};
+  all[pkey()] = p; save("vm_progress", all);
+}
+
+/* ---------- Modules list ---------- */
+function showModules(){ $("module").hidden = true; $("modules-wrap").hidden = false; speechSynthesis && speechSynthesis.cancel(); renderLearn(); }
+function renderLearn(){
+  const lv = $("levels"); lv.replaceChildren();
+  LEVELS.forEach(l => { const b = el("button",{textContent:label(l)}); b.setAttribute("aria-pressed", l === viewLevel); b.onclick = () => { viewLevel = l; renderLearn(); }; lv.appendChild(b); });
+  const list = $("modules"); list.replaceChildren(); const p = prog();
+  CURR[viewLevel].forEach(s => {
+    const done = s.topics.filter((_, i) => p[mid(viewLevel, s.sub, i)]).length;
+    const card = el("div",{className:"subj"},[el("h3",{textContent:s.sub + "  (" + done + "/" + s.topics.length + " done)"}),
+      el("div",{className:"bar"},[el("i",{style:"width:" + Math.round(done / s.topics.length * 100) + "%"})])]);
+    s.topics.forEach((t, i) => {
+      const d = p[mid(viewLevel, s.sub, i)], open = i === 0 || p[mid(viewLevel, s.sub, i - 1)];
+      const b = el("button",{className:"mod " + (d ? "done" : open ? "open" : "locked"), disabled:!open},
+        [el("span",{textContent:d ? "\u2705" : open ? "\u25B6\uFE0F" : "\uD83D\uDD12"}), el("span",{textContent:"Module " + (i + 1) + ": " + t}),
+         el("small",{textContent:d ? d.acc + "%" : (open ? "" : "Locked")})]);
+      b.onclick = () => openModule(viewLevel, s.sub, i);
+      card.appendChild(b);
+    });
+    list.appendChild(card);
+  });
+}
+
+/* ---------- One module: story lesson, then quiz ---------- */
+let cur = null, lang = "en", lastLesson = "", lessonShown = false; const cache = {};
+function openModule(level, sub, i){
+  cur = {level, sub, i, topic:CURR[level].find(x => x.sub === sub).topics[i]};
+  $("modules-wrap").hidden = true; $("module").hidden = false;
+  $("mtitle").textContent = cur.topic; $("msub").textContent = label(level) + "  |  " + sub + "  |  Module " + (i + 1);
+  $("lesson").replaceChildren(); $("quiz").replaceChildren(); lastLesson = ""; lessonShown = false; window.scrollTo(0, 0);
+}
+$("back").onclick = showModules;
+$("lang").onclick = () => { lang = lang === "en" ? "te" : "en"; $("lang").textContent = lang === "en" ? "English" : "తెలుగు"; if (lessonShown) teach(); };
+$("speak2").onclick = () => speakText(lastLesson);
+$("teach").onclick = teach;
+
+async function teach(){
+  const target = $("lesson"), key = cur.level + "|" + cur.topic + "|" + lang;
+  target.replaceChildren(el("div",{className:"box",textContent:"Teacher Mitra is getting your story ready..."})); $("teach").disabled = true;
+  try {
+    let d = cache[key];
+    if (!d){
+      d = parseJSON(await callAI("lesson","Topic: " + cur.topic + ". Subject: " + cur.sub + ". Class: " + cur.level + ". Language: " + (lang === "te" ? "Telugu" : "English") + "."));
+      if (!d || !d.story) throw new Error("Sorry, I could not teach that topic. Please try again.");
+      cache[key] = d;
+    }
+    renderLesson(d); lessonShown = true;
+  } catch(e){ showError(target, e.message || "Something went wrong. Please try again."); }
+  $("teach").disabled = false;
+}
+function renderLesson(d){
+  const parts = [el("h2",{textContent:d.title || cur.topic}), el("div",{className:"box story pre",textContent:d.story})];
+  const steps = (d.steps || []);
+  if (steps.length){
+    const v = el("div",{className:"visual"});
+    steps.forEach((s, i) => { if (i) v.appendChild(el("span",{className:"arrow",textContent:"\u279C"}));
+      v.appendChild(el("div",{className:"scene"},[el("div",{className:"em",textContent:s.emoji || ""}), el("p",{textContent:s.caption || ""})])); });
+    parts.push(el("div",{className:"box"},[el("b",{textContent:"Picture it"}), v]));
+  }
+  if ((d.keypoints || []).length){
+    const ul = el("ul",{className:"kp"}); d.keypoints.forEach(k => ul.appendChild(el("li",{textContent:k})));
+    parts.push(el("div",{className:"box"},[el("b",{textContent:"Remember"}), ul]));
+  }
+  if (d.try) parts.push(el("div",{className:"box"},[el("b",{textContent:"Think about it: "}), document.createTextNode(d.try)]));
+  $("lesson").replaceChildren(...parts);
+  lastLesson = (d.title || "") + ". " + d.story + " " + (d.keypoints || []).join(". ");
+}
+
+/* ---------- Module quiz (accuracy and speed; pass to unlock the next module) ---------- */
+let Q = [], qi = 0, results = [], t0 = 0, tick = null, answered = false;
+$("takequiz").onclick = async () => {
+  const qb = $("quiz"); $("takequiz").disabled = true;
+  qb.replaceChildren(el("div",{className:"box",textContent:"Teacher Mitra is writing your quiz..."}));
+  try {
+    const d = parseJSON(await callAI("quiz","Topic: " + cur.topic + " (" + cur.sub + "). Class: " + cur.level + "."));
+    Q = (d.questions || []).filter(q => q && q.q && Array.isArray(q.options) && q.options.length >= 2 && Number.isInteger(q.answer) && q.options[q.answer] !== undefined);
+    if (!Q.length) throw new Error("Could not make a quiz. Please try again.");
+    qi = 0; results = []; showQ();
+  } catch(e){ showError(qb, e.message || "Something went wrong. Please try again."); }
+  $("takequiz").disabled = false;
+};
+function showQ(){
+  const q = Q[qi]; answered = false; t0 = Date.now(); clearInterval(tick);
+  const timer = el("span",{textContent:"0 s"});
+  tick = setInterval(() => { timer.textContent = Math.floor((Date.now() - t0) / 1000) + " s"; }, 500);
+  const card = el("div",{className:"box"},[
+    el("div",{className:"qhead"},[el("span",{textContent:"Question " + (qi + 1) + " of " + Q.length}), timer]),
+    el("p",{textContent:q.q,style:"font-weight:700"})]);
+  const fb = el("div",{style:"margin-top:10px"});
+  q.options.forEach((o, i) => {
+    const b = el("button",{className:"opt",textContent:o});
+    b.onclick = () => {
+      if (answered) return; answered = true; clearInterval(tick);
+      const secs = Math.max(1, Math.round((Date.now() - t0) / 1000)), ok = i === q.answer;
+      results.push({ok, secs}); b.classList.add(ok ? "right" : "wrong");
+      if (!ok) card.querySelectorAll(".opt")[q.answer].classList.add("right");
+      fb.replaceChildren(el("b",{textContent:(ok ? "Correct! " : "Not quite. ") + "(" + secs + " s)"}), el("p",{textContent:q.why || ""}),
+        el("button",{className:"act",textContent:qi + 1 < Q.length ? "Next question" : "See my results", onclick:() => { qi++; qi < Q.length ? showQ() : showResult(); }}));
+    };
+    card.appendChild(b);
+  });
+  card.appendChild(fb); $("quiz").replaceChildren(card);
+}
+function showResult(){
+  const n = results.length, right = results.filter(r => r.ok).length, acc = Math.round(right / n * 100);
+  const avg = Math.round(results.reduce((s, r) => s + r.secs, 0) / n * 10) / 10;
+  const speed = avg <= 8 ? "Very fast" : avg <= 15 ? "Good speed" : "Take your time, then practise to get faster";
+  const need = Math.max(1, Math.ceil(n * PASS_RATIO)), passed = right >= need;
+  const stat = (v, l) => el("div",{className:"stat"},[el("b",{textContent:v}), el("span",{textContent:l})]);
+  const acts = el("div",{className:"row"});
+  const topics = CURR[cur.level].find(x => x.sub === cur.sub).topics;
+  if (passed){
+    setDone(mid(cur.level, cur.sub, cur.i), acc, avg);
+    if (cur.i + 1 < topics.length) acts.appendChild(el("button",{className:"act",textContent:"Next module",onclick:() => openModule(cur.level, cur.sub, cur.i + 1)}));
+    acts.appendChild(el("button",{className:"act alt",textContent:"All modules",onclick:showModules}));
+  } else {
+    acts.appendChild(el("button",{className:"act",textContent:"Try the quiz again",onclick:() => $("takequiz").click()}));
+    acts.appendChild(el("button",{className:"act alt",textContent:"Read the story again",onclick:() => { window.scrollTo(0, 0); teach(); }}));
+  }
+  $("quiz").replaceChildren(el("div",{className:"box"},[
+    el("h2",{textContent:passed ? "Module complete!" : "Not yet, keep going!",style:"margin-top:0"}),
+    el("div",{className:"stats"},[stat(right + "/" + n, "Score"), stat(acc + "%", "Accuracy"), stat(avg + " s", "Speed per question")]),
+    el("div",{className:"bar"},[el("i",{style:"width:" + acc + "%"})]),
+    el("p",{textContent:"Speed: " + speed}),
+    el("p",{textContent:passed ? "Great work! " + (cur.i + 1 < topics.length ? "The next module is now open." : "You finished every module in this subject.") : "You need " + need + " correct answers to finish this module."}),
+    acts]));
+}
+
+/* ---------- Ask / Translate / Grammar ---------- */
+const POS = {
+  noun:["Nouns","Name of a person, place, animal or thing.","#cfe3ff"], pronoun:["Pronouns","Words used instead of a noun (he, she, it).","#e6d4ff"],
+  verb:["Verbs","Words that show action or being.","#ffd6d6"], adjective:["Adjectives","Words that describe a noun.","#d4f5d0"],
+  adverb:["Adverbs","Words that tell how, when or where.","#fff0b8"], preposition:["Prepositions","Words that show position or direction (in, on, at).","#ffe0c2"],
+  conjunction:["Conjunctions","Words that join words or sentences (and, but).","#d0f2f2"], interjection:["Interjections","Words that show feelings (wow, oh).","#ffd0ea"],
+  article:["Articles","The small words a, an, the.","#e5e5e5"]
+};
+function showPOS(raw){
+  let data; try { data = parseJSON(raw); } catch { showError(out,"Could not read the answer. Please try again."); return; }
+  const words = data.words || [];
+  if (!words.length){ showError(out,"Please type a normal English sentence about school or daily life."); return; }
+  const line = el("div",{className:"chips"}), groups = {};
+  words.forEach(w => {
+    const k = String(w.pos).toLowerCase(), info = POS[k];
+    const c = el("div",{className:"chip"},[w.word, el("small",{textContent:info ? info[0].slice(0, -1) : k})]);
+    c.style.background = info ? info[2] : "#eee"; line.appendChild(c); (groups[k] = groups[k] || []).push(w.word);
+  });
+  const frag = [el("b",{textContent:"Your sentence"}), line, el("b",{textContent:"Parts of speech, section by section",style:"display:block;margin-top:14px"})];
+  Object.keys(groups).forEach(k => {
+    const info = POS[k] || [k, "", "#eee"];
+    const s = el("div",{className:"sec"},[el("h3",{textContent:info[0] + " (" + groups[k].length + ")"}), el("p",{textContent:info[1]})]);
+    groups[k].forEach(w => s.appendChild(el("span",{className:"w",textContent:w}))); s.style.background = info[2]; frag.push(s);
+  });
+  out.className = "box"; out.replaceChildren(...frag); lastAnswer = words.map(w => w.word + ", " + w.pos).join(". ");
+}
+$("go").onclick = async () => {
+  const text = box.value.trim();
+  if (!text){ showError(out,"Please type something first."); return; }
+  out.className = "box pre"; out.textContent = "Thinking..."; $("go").disabled = true;
+  try { const a = await callAI(mode, text); if (mode === "pos") showPOS(a); else { out.textContent = a; lastAnswer = a; } }
+  catch(e){ showError(out, e.message || "Something went wrong. Please try again."); }
+  $("go").disabled = false;
+};
+$("mic").onclick = () => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR){ showError(out,"Voice input is not supported in this browser. Try Chrome."); return; }
+  const rec = new SR(); rec.lang = MODES[mode].mic;
+  rec.onresult = e => { box.value = e.results[0][0].transcript; };
+  rec.onerror = () => showError(out,"Could not hear you. Please try again."); rec.start();
+};
+$("speak").onclick = () => speakText(lastAnswer);
+
+enter();
+if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {})); }
+</script>
+</body>
+</html>
